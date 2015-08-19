@@ -1,22 +1,22 @@
-#include <iostream>
+ï»¿#include <iostream>
 using namespace std;
 const int nRow = 500;
 const int nColumn = 500;
 
-int Max[nRow][nColumn];//×ÊÔ´×î´óĞèÇó¾ØÕó
-int Allocation[nRow][nColumn];//ÒÑ·ÖÅä×ÊÔ´¾ØÕó
-int Need[nRow][nColumn];//ĞèÒª×ÊÔ´¾ØÕó
-int BeginSource[nColumn];//×î¿ªÊ¼¸÷ÖÖ×ÊÔ´µÄÊıÁ¿
-int Available[nColumn];//µ±Ç°¿ÉÓÃ¸÷Àà×ÊÔ´ÊıÁ¿
-int Requset[nColumn];//Ìá³ö×ÊÔ´ÇëÇó¸öÊı
-int safeOrder[nRow];//°²È«ĞòÁĞ
+int Max[nRow][nColumn];//èµ„æºæœ€å¤§éœ€æ±‚çŸ©é˜µ
+int Allocation[nRow][nColumn];//å·²åˆ†é…èµ„æºçŸ©é˜µ
+int Need[nRow][nColumn];//éœ€è¦èµ„æºçŸ©é˜µ
+int BeginSource[nColumn];//æœ€å¼€å§‹å„ç§èµ„æºçš„æ•°é‡
+int Available[nColumn];//å½“å‰å¯ç”¨å„ç±»èµ„æºæ•°é‡
+int Requset[nColumn];//æå‡ºèµ„æºè¯·æ±‚ä¸ªæ•°
+int safeOrder[nRow];//å®‰å…¨åºåˆ—
 int nSource;
 int nPortNum;
-int iTime = 0;//ÏµÍ³Ê±¿Ì
+int iTime = 0;//ç³»ç»Ÿæ—¶åˆ»
 void show()
 {
 
-	/*ÏÔÊ¾ÓÃ»§ÒÑ¾­ÊäÈëµÄÊı¾İ*/
+	/*æ˜¾ç¤ºç”¨æˆ·å·²ç»è¾“å…¥çš„æ•°æ®*/
 	cout << "------------Allocation-----------------" << endl;
 	for (int i = 0; i < nPortNum; i++)
 	{
@@ -40,18 +40,18 @@ void show()
 	cout << endl;
 	cout << "---------------------------------------" << endl;
 }
-void Init()//³õÊ¼»¯º¯Êı
+void Init()//åˆå§‹åŒ–å‡½æ•°
 {
-	cout << "ÇëÊäÈë×ÊÔ´ÖÖÀàÊı" << endl;
+	cout << "è¯·è¾“å…¥èµ„æºç§ç±»æ•°" << endl;
 	cin >> nSource;
-	cout << "ÇëÊäÈë½ø³ÌÊıÁ¿" << endl;
+	cout << "è¯·è¾“å…¥è¿›ç¨‹æ•°é‡" << endl;
 	cin >> nPortNum;
 	if (nSource > 500|| nPortNum >500)
 	{
-		cout << "×ÊÔ´ÖÖÀà»ò½ø³ÌÊıÁ¿¹ı¶à£¬Çë¿ØÖÆÔÚ500ÒÔÄÚ" << endl;
+		cout << "èµ„æºç§ç±»æˆ–è¿›ç¨‹æ•°é‡è¿‡å¤šï¼Œè¯·æ§åˆ¶åœ¨500ä»¥å†…" << endl;
 		return;
 	}
-	cout << "MAXÇëÊäÈëÏÖÓĞ¸÷×ÊÔ´×î´óĞèÇóÊıÁ¿" << nPortNum<<"*"<<nSource<<"µÄ¾ØÕó"<<endl;
+	cout << "MAXè¯·è¾“å…¥ç°æœ‰å„èµ„æºæœ€å¤§éœ€æ±‚æ•°é‡" << nPortNum<<"*"<<nSource<<"çš„çŸ©é˜µ"<<endl;
 	for (int i = 0; i < nPortNum;i++)
 	{
 		for (int j = 0; j < nSource;j++)
@@ -59,7 +59,7 @@ void Init()//³õÊ¼»¯º¯Êı
 			cin >> Max[i][j];
 		}
 	}
-	cout << "ALLOCATIONÇëÊäÈëÒÑ¾­·ÖÅä¸÷¸ö×ÊÔ´µÄÊıÁ¿" << nPortNum << "*" << nSource << "µÄ¾ØÕó" << endl;
+	cout << "ALLOCATIONè¯·è¾“å…¥å·²ç»åˆ†é…å„ä¸ªèµ„æºçš„æ•°é‡" << nPortNum << "*" << nSource << "çš„çŸ©é˜µ" << endl;
 start:
 	for (int i = 0; i < nPortNum; i++)
 	{
@@ -68,14 +68,14 @@ start:
 			cin >> Allocation[i][j];
 			if (Allocation[i][j]>Max[i][j])
 			{
-				cout << "ÒÑ·ÖÅäµÄ×ÊÔ´ÊıÁ¿´óÓÚ×î´óĞèÇóÁ¿£¬ÇëÖØĞÂ·ÖÅä" << endl;
+				cout << "å·²åˆ†é…çš„èµ„æºæ•°é‡å¤§äºæœ€å¤§éœ€æ±‚é‡ï¼Œè¯·é‡æ–°åˆ†é…" << endl;
 				goto start;
 			}
 		}
 	}
 
 	
-	//¼ÆËãNeed¾ØÕó
+	//è®¡ç®—NeedçŸ©é˜µ
 	for (int i = 0; i < nPortNum; i++)
 	{
 		for (int j = 0; j < nSource; j++)
@@ -84,7 +84,7 @@ start:
 		}
 	}
 
-	//¼ÆËãµ±Ç°¿ÉÓÃ×ÊÔ´ÊıÁ¿Available
+	//è®¡ç®—å½“å‰å¯ç”¨èµ„æºæ•°é‡Available
 	for (int i = 0; i < nPortNum; i++)
 	{
 		for (int j = 0; j < nSource; j++)
@@ -93,14 +93,14 @@ start:
 		}
 	}
 
-	cout << "ÇëÊäÈë¸÷ÖÖ×ÊÔ´¿ªÊ¼µÄÊıÁ¿" << nSource << "ÁĞ" << endl;
+	cout << "è¯·è¾“å…¥å„ç§èµ„æºå¼€å§‹çš„æ•°é‡" << nSource << "åˆ—" << endl;
 begin:
 	for (int i = 0; i < nSource; i++)
 	{
 		cin >> BeginSource[i];
 		if (BeginSource[i] < Available[i])
 		{
-			cout << "µÚ"<<i<<"¸ö×ÊÔ´¿ªÊ¼×ÊÔ´ÊıÁ¿¸öÊıÌ«ÉÙ£¬ÇëÖØĞÂÊäÈë" << endl;
+			cout << "ç¬¬"<<i<<"ä¸ªèµ„æºå¼€å§‹èµ„æºæ•°é‡ä¸ªæ•°å¤ªå°‘ï¼Œè¯·é‡æ–°è¾“å…¥" << endl;
 			goto begin;
 		}
 	}
@@ -110,18 +110,18 @@ begin:
 		Available[i] = BeginSource[i] - Available[i];
 	}	
 }
-//°²È«ĞÔËã·¨£¬¼ÆËã´Ë¿Ì×´Ì¬ÊÇ·ñ°²È«
+//å®‰å…¨æ€§ç®—æ³•ï¼Œè®¡ç®—æ­¤åˆ»çŠ¶æ€æ˜¯å¦å®‰å…¨
 bool Safe()
 {
 	
 	int Work[nColumn];
 	bool Finish[nColumn];
-	//½«work¹¤×÷ÏòÁ¿³õÊ¼»¯
+	//å°†workå·¥ä½œå‘é‡åˆå§‹åŒ–
 	for (int i = 0; i < nSource;i++)
 	{
 		Work[i] = Available[i];
 	}
-	//³õÊ¼»¯finishÈ«Îªfalse
+	//åˆå§‹åŒ–finishå…¨ä¸ºfalse
 	for (int i = 0; i < nPortNum; i++)
 	{
 		Finish[i] = false;
@@ -129,22 +129,22 @@ bool Safe()
 
 	int nCount = 0;
 	int k = nPortNum;
-	while (k--)//¿´¹¤×÷ÏòÁ¿ÊÇ·ñ²Ù×÷ÁËnSource´Î
+	while (k--)//çœ‹å·¥ä½œå‘é‡æ˜¯å¦æ“ä½œäº†nSourceæ¬¡
 	{
 
 		for (int i = 0; i < nPortNum; i++)
 		{
-			int iCount = 0;//¼ÆÊı
+			int iCount = 0;//è®¡æ•°
 			int iNum = 0;
 			for (int j = 0; j < nSource; j++)
 			{
-				//ËùÓĞ×ÊÔ´Need¶¼´óÓÚ¹¤×÷ÏòÁ¿£¬Ôò²»°²È«
+				//æ‰€æœ‰èµ„æºNeedéƒ½å¤§äºå·¥ä½œå‘é‡ï¼Œåˆ™ä¸å®‰å…¨
 				if (Need[i][j] <= Work[j])
 				{
 					iNum++;
 				}
 			}
-			if (iNum == nSource)//¸Ã½ø³ÌÂú×ã
+			if (iNum == nSource)//è¯¥è¿›ç¨‹æ»¡è¶³
 			{
 				if (Finish[i] == true)
 				{
@@ -166,20 +166,20 @@ bool Safe()
 	}
 	return false;
 }
-//ÒøĞĞ¼ÒËã·¨
+//é“¶è¡Œå®¶ç®—æ³•
 void BankSort()
 {
 	int n;
 	show();
 	a:
-	cout << "ÇëÊäÈë´Ë¿ÌÄÄ¸ö½ø³ÌÇëÇóÉêÇë×ÊÔ´" << endl;
+	cout << "è¯·è¾“å…¥æ­¤åˆ»å“ªä¸ªè¿›ç¨‹è¯·æ±‚ç”³è¯·èµ„æº" << endl;
 	cin >> n;
 	if (n >= nPortNum)
 	{
-		cout << "Ã»ÓĞÕâ¸ö½ø³ÌºÅ";
+		cout << "æ²¡æœ‰è¿™ä¸ªè¿›ç¨‹å·";
 		goto a;
 	}
-	cout << "ÇëÊäÈëÃ¿Àà×ÊÔ´µÄÇëÇó¸öÊı" << endl;
+	cout << "è¯·è¾“å…¥æ¯ç±»èµ„æºçš„è¯·æ±‚ä¸ªæ•°" << endl;
 	
 	for (int i = 0; i < nSource; i++)
 	{
@@ -187,13 +187,13 @@ void BankSort()
 		cin >> Requset[i];
 		if (Requset[i] > Need[n][i ])
 		{
-			cout << "³ö´í£¬ÉêÇë×ÊÔ´´óÓÚĞèÒª×ÊÔ´,ÇëÖØĞÂÊäÈë"<<endl;
+			cout << "å‡ºé”™ï¼Œç”³è¯·èµ„æºå¤§äºéœ€è¦èµ„æº,è¯·é‡æ–°è¾“å…¥"<<endl;
 			goto mis;
 		}
 		if (Requset[i] > Available[i])
 		{
-			//½ø³Ìpi×èÈû£¬·µ»Ø
-			cout << "³ö´í£¬ÉêÇë×ÊÔ´´óÓÚÏÖÓĞ×ÊÔ´,ÇëÖØĞÂÊäÈë" << endl;
+			//è¿›ç¨‹pié˜»å¡ï¼Œè¿”å›
+			cout << "å‡ºé”™ï¼Œç”³è¯·èµ„æºå¤§äºç°æœ‰èµ„æº,è¯·é‡æ–°è¾“å…¥" << endl;
 			goto mis;
 		}
 	}
@@ -203,13 +203,13 @@ void BankSort()
 		Allocation[n][i] += Requset[i];
 		Need[n][i] -= Requset[i];
 	}
-	//µ÷ÓÃ°²È«ĞÔËã·¨,¼ÆËã´Ë¿ÌÏµÍ³×´Ì¬ÊÇ·ñ°²È«
+	//è°ƒç”¨å®‰å…¨æ€§ç®—æ³•,è®¡ç®—æ­¤åˆ»ç³»ç»ŸçŠ¶æ€æ˜¯å¦å®‰å…¨
 	
 	if (Safe())
 	{
 
 		char c;
-		cout << "T"<<iTime<<"Ê±¿ÌÏµÍ³°²È«°²È«ĞòÁĞÎª" <<"  ";
+		cout << "T"<<iTime<<"æ—¶åˆ»ç³»ç»Ÿå®‰å…¨å®‰å…¨åºåˆ—ä¸º" <<"  ";
 		for (int i = 0; i < nPortNum;i++)
 		{
 			if (i == nPortNum-1)
@@ -217,9 +217,9 @@ void BankSort()
 				cout << safeOrder[i] << " ";
 				break;
 			}
-			cout <<safeOrder[i]<<"-->";//°²È«ĞòÁĞ
+			cout <<safeOrder[i]<<"-->";//å®‰å…¨åºåˆ—
 		}
-		cout << "ÊÇ·ñ¼ÌĞøµ÷¶È°´¼üÅÌÈÎÒâ¼ü¼ÌĞø" << endl;
+		cout << "æ˜¯å¦ç»§ç»­è°ƒåº¦æŒ‰é”®ç›˜ä»»æ„é”®ç»§ç»­" << endl;
 		cin >> c;
 		if (c >= 0||c <= 127)
 		{
@@ -230,7 +230,7 @@ void BankSort()
 	}
 	else
 	{
-		//´ËÊ±×ÊÔ´·ÖÅä×´Ì¬²»°²È«£¬»Ö¸´Êı¾İµ½Î´·ÖÅä×´Ì¬
+		//æ­¤æ—¶èµ„æºåˆ†é…çŠ¶æ€ä¸å®‰å…¨ï¼Œæ¢å¤æ•°æ®åˆ°æœªåˆ†é…çŠ¶æ€
 		for (int i = 0; i < nSource; i++)
 		{
 			Available[i] += Requset[i];
@@ -238,7 +238,7 @@ void BankSort()
 			Need[n][i] += Requset[i];
 		}
 		char c;
-		cout << "T" << iTime << "Ê±¿ÌÏµÍ³²»°²È«²»ÄÜ·ÖÅäÈÎÒâ¼ü¼ÌĞø" << endl;
+		cout << "T" << iTime << "æ—¶åˆ»ç³»ç»Ÿä¸å®‰å…¨ä¸èƒ½åˆ†é…ä»»æ„é”®ç»§ç»­" << endl;
 		cin >> c;
 		if (c >= 0 || c <= 127)
 		{
@@ -252,6 +252,5 @@ int main()
 {
 	Init();
 	BankSort();
-	system("pause");
 	return 0;
 }
