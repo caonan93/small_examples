@@ -325,6 +325,12 @@ void test_PrintMinNumber() {
 	soutaion stest;
 	string res = stest.PrintMinNumber(numarrary);
 }
+
+void test_duplicate() {
+	int num[] = { 2, 3, 1, 0, 2, 5, 3 };
+	int num1;
+	bool res = duplicate(num, 7, &num1);
+}
 int main() {
 	test_StrToInt();
 	test_Find();
@@ -349,5 +355,6 @@ int main() {
 	test_minNumberInRotateArray();
 	test_FindFirstCommonNode();
 	test_PrintMinNumber();
+	test_duplicate();
 	return 0;
 }

@@ -817,6 +817,7 @@ ListNode* FindFirstCommonNode(ListNode *pHead1, ListNode *pHead2) {
 
 class soutaion {
 public:
+	//例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
 	string PrintMinNumber(vector<int> numbers) {
 		if (numbers.empty())
 		{
@@ -857,4 +858,35 @@ public:
 		return strcompare1 > strcompare2 ? true : false;
 	}
 };
-//例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+
+
+/*
+在一个长度为n的数组里的所有数字都在0到n - 1的范围内。 数组中某些数字是重复的，
+但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。
+例如，如果输入长度为7的数组{ 2, 3, 1, 0, 2, 5, 3 }，那么对应的输出是重复的数字2或者3。*/
+bool duplicate(int numbers[], int length, int* duplication) {
+	if (numbers == NULL || length <= 0)
+	{
+		return false;
+	}
+	for (int i = 0; i < length;++i)
+	{
+		if (numbers[i]<0||numbers[i]>length-1)
+		{
+			return false;
+		}
+	}
+	for (int i = 0; i < length;i++)
+	{
+		while (numbers[i]!=i)
+		{
+			if (numbers[i] == numbers[numbers[i]])
+			{
+				*duplication = numbers[i];
+				return true;
+			}
+			std::swap(numbers[i], numbers[numbers[i]]);
+		}
+	}
+	return false;
+}
