@@ -59,8 +59,7 @@ int test_single() {
 	curl_global_cleanup();
 }
 
-int main() {
-
+void test2() {
 	//https://www.baidu.com/s?wd=ubuntu
 	CURLcode code = curl_global_init(CURL_GLOBAL_ALL);
 	CURL *easy_handle = curl_easy_init();
@@ -73,16 +72,16 @@ int main() {
 	{
 		cout << "post failed\n";
 	}
-	
-		const char* url_str = "http://www.baidu.com/s?wd=生命动力";
+
+	const char* url_str = "http://www.baidu.com/s?wd=生命动力";
 	// 构造包头，模拟浏览器请求
-		char array[][100] = { "Host:www.baidu.com",
-			"Content-Type:application/x-www-form-urlencoded",//post请求
-			"Connection: keep-alive",
-			'Referer:http://www.baidu.com',
-			'User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; BIDUBrowser 2.6)' };
-		
-		
+	char array[][100] = { "Host:www.baidu.com",
+		"Content-Type:application/x-www-form-urlencoded",//post请求
+		"Connection: keep-alive",
+		'Referer:http://www.baidu.com',
+		'User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; BIDUBrowser 2.6)' };
+
+
 	curl_easy_setopt(easy_handle, CURLOPT_URL, url_str);
 	curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, array);
 	//curl_easy_setopt(easy_handle, CURLOPT_RETURNTRANSFER, 1);
@@ -100,5 +99,24 @@ int main() {
 	curl_easy_cleanup(easy_handle);
 	curl_global_cleanup();
 	//test_single();
+}
+
+int socketCallback(CURL* c, int fd, int what, void* userp, void* socketp) {
+
+}
+
+int timerCallback(CURLM* curlm, long ms, void* userp) {
+
+}
+int main() {
+	CURLcode code = curl_global_init(CURL_GLOBAL_ALL);
+	CURL *easy_handle = curl_easy_init();
+	CURLM* curlm_ = curl_multi_init();
+
+	curl_multi_setopt(curlm_, CURLMOPT_SOCKETFUNCTION, socketCallback);
+	curl_multi_setopt(curlm_, CURLMOPT_SOCKETDATA, this);
+	curl_multi_setopt(curlm_, CURLMOPT_TIMERFUNCTION, timerCallback);
+	curl_multi_setopt(curlm_, CURLMOPT_TIMERDATA, this);
+
 	return 0;
 }

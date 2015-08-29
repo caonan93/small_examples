@@ -356,5 +356,14 @@ int main() {
 	test_FindFirstCommonNode();
 	test_PrintMinNumber();
 	test_duplicate();
+	int i, s, p, n;
+	scanf("%d", &n);
+	for (s = p = 0, i = 1; i < n;i++)
+	{
+		p += i;
+		s +=( p );
+		s += p;
+	}
+	printf("%d\n", s);
 	return 0;
 }
