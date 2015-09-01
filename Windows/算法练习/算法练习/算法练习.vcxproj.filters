@@ -5,9 +5,12 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="头文件">
+    <Filter Include="ALT">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{7f283e50-1b5e-44ee-92a7-86584bce5d9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -17,7 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.h">
-      <Filter>头文件</Filter>
+      <Filter>ALT</Filter>
+    </ClInclude>
+    <ClInclude Include="commonproblem.h">
+      <Filter>ALT</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="commonproblem_test.h">
+      <Filter>test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

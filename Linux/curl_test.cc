@@ -113,10 +113,10 @@ int main() {
 	CURL *easy_handle = curl_easy_init();
 	CURLM* curlm_ = curl_multi_init();
 
-	curl_multi_setopt(curlm_, CURLMOPT_SOCKETFUNCTION, socketCallback);
-	curl_multi_setopt(curlm_, CURLMOPT_SOCKETDATA, this);
-	curl_multi_setopt(curlm_, CURLMOPT_TIMERFUNCTION, timerCallback);
-	curl_multi_setopt(curlm_, CURLMOPT_TIMERDATA, this);
+//	curl_multi_setopt(curlm_, CURLMOPT_SOCKETFUNCTION, socketCallback);
+//	curl_multi_setopt(curlm_, CURLMOPT_SOCKETDATA, this);
+//	curl_multi_setopt(curlm_, CURLMOPT_TIMERFUNCTION, timerCallback);
+//	curl_multi_setopt(curlm_, CURLMOPT_TIMERDATA, this);
 
 	return 0;
 }
