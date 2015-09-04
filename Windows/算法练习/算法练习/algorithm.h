@@ -912,3 +912,239 @@ bool duplicate(int numbers[], int length, int* duplication) {
 	}
 	return false;
 }
+//合并排序链表
+ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
+{
+	if (!pHead1)
+	{
+		return pHead2;
+	}
+	else if (!pHead2)
+	{
+		return pHead1;
+	}
+	ListNode* pHead = 0;
+	if (pHead1->val < pHead2->val)
+	{
+		pHead = pHead1;
+		pHead->next = Merge(pHead1->next, pHead2);
+	}
+	else
+	{
+		pHead = pHead2;
+		pHead->next = Merge(pHead1, pHead2->next);
+	}
+	return pHead;
+}
+
+//连续子数组的最大和6,-3,-2,7,-15,1,2,2最大和为8
+int FindGreatestSumOfSubArray(vector<int> array)
+{
+	if (array.empty())
+	{
+		return 0;
+	}
+	int cur = 0;
+	int max = array[0];
+	for (int i = 0; i < array.size();i++)
+	{
+		cur += array[i];
+		if (cur < 0)
+		{
+			if (max < cur)
+			{
+				max = cur;
+			}
+		}
+		if (max <= cur)
+		{
+			max = cur;
+		}
+		if (cur < 0)
+		{
+			cur = 0;
+		}
+	}
+	return max;
+}
+
+//统计一个数字在排序数组中出现的次数。 
+namespace getnumofk
+{
+	int getLastK(vector<int> data, int start, int end, int k)
+	{
+		if (start > end)
+		{
+			return -1;
+		}
+		int mid = (start + end) / 2;
+		if (data[mid] == k)
+		{
+			if (mid == end || data[mid + 1] != k)//判断前一个是不是k
+			{
+				return mid;
+			}
+			else
+			{
+				return getLastK(data, mid + 1, end, k);
+			}
+		}
+		else if (data[mid] < k)
+		{
+			return getLastK(data, mid + 1, end, k);
+		}
+		else//data[mid] > k
+		{
+			return getLastK(data, start, mid - 1, k);			
+		}
+	}
+
+	int getFirstK(vector<int> data, int start, int end, int k)
+	{
+		if (start > end)
+		{
+			return -1;
+		}
+
+		int mid = (start + end) / 2;
+		if (data[mid] == k)
+		{
+			if (mid == 0 || data[mid - 1] != k)//判断前一个是不是k
+			{
+				return mid;
+			}
+			else
+			{
+				return getFirstK(data, start, mid - 1, k);
+			}
+		}
+		else if (data[mid] < k)
+		{			
+			return getFirstK(data, mid + 1, end, k);
+		}
+		else//data[mid] > k
+		{
+			return getFirstK(data, start, mid - 1, k);
+		}
+	}
+	//复杂度nlogn
+	int GetNumberOfK(vector<int> data, int k)
+	{
+		if (data.empty())
+		{
+			return 0;
+		}
+		int first = getFirstK(data, 0, data.size() - 1, k);
+		int ilast = getLastK(data, 0, data.size() - 1, k);
+		
+		if (first != -1 && ilast != -1)
+		{
+			return ilast - first + 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+}
+
+//一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。 
+namespace findnumonce
+{
+	//{2,4,3,6,3,2,5,5}
+	unsigned int getindexof0(int index)
+	{
+		int i = 0;
+		while (((index & 1) == 0) && (i<8 * sizeof(index)))//一定要注意这里的运算符优先级顺序
+		{
+			index = index >> 1;
+			i++;
+		}
+		return i;
+	}
+
+	int isBit(int data,int offset)
+	{
+		data = data >> offset;
+		return data & 1 ? 1 : 0;
+	}
+	void FindNumsAppearOnce(vector<int> data, int* num1, int *num2)
+	{
+		if (data.empty())return;
+		*num1 = *num2 = 0;
+		if (data.size() == 1)
+		{
+			return;
+		}
+		int index0 = 0;
+ 		for (int i = 0; i < data.size();i++)
+		{
+			index0 ^= data[i];//只有两个数不同才会异或成非0的数
+		}
+		unsigned int indexof0 = getindexof0(index0);//需要右移几位
+		//分组
+		for (int i = 0; i < data.size(); i++)
+		{
+			if (isBit(data[i], indexof0))
+			{
+				*num1 ^= data[i];
+			}
+			else
+			{
+				*num2 ^= data[i];
+			}
+		}
+	}
+}
+
+//求1+2+3+...+n，要求不能使用乘除法、for、while、if、else、switch、case
+//等关键字及条件判断语句（A?B:C）。
+class sum
+{
+public:
+	sum()
+	{
+		i++;
+		tsum += i;
+	}
+	static void reset()
+	{
+		i = 0;
+		tsum = 0;
+	}
+	static int getsum()
+	{
+		return tsum;
+	}
+	~sum() {}
+private:
+	static int i;
+	static int tsum;
+};
+int sum::i = 0;
+int sum::tsum = 0;
+class Solution4
+{
+public:
+	int Sum_Solution(int n)
+	{
+		sum::reset();
+		sum* p = new sum[n];
+		delete[] p;
+		return sum::getsum();
+	}
+};
+
+//删除排序链表中重复结点
+ListNode* deleteDuplication(ListNode* pHead)
+{
+	if (!pHead )return NULL;
+	ListNode* tmp = pHead;
+	//判断是否头结点为重复结点
+
+	if (tmp->val == tmp->next->val)
+	{
+		
+	}
+	return pHead;
+}

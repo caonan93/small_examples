@@ -26,6 +26,12 @@ void test() {
 	test_FindFirstCommonNode();
 	test_PrintMinNumber();
 	test_duplicate();
+	test_Merge();
+	test_FindGreatestSumOfSubArray();
+	test_GetNumberOfK();
+	test_FindNumsAppearOnce();
+	test_Sum_Solution();
+	test_deleteDuplication();
 }
 
 void common() {

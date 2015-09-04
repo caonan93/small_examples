@@ -26,3 +26,4 @@ void common_heap_stack_only() {
 	onlyheapobect::B b;
 	//onlyheapobect::B *b = new onlyheapobect::B;  error
 }
+

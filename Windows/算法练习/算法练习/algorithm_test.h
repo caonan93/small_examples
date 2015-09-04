@@ -337,3 +337,43 @@ void test_duplicate() {
 	int num1;
 	bool res = duplicate(num, 7, &num1);
 }
+
+void test_Merge()
+{
+	ListNode *pHead1 = createList(5);
+	ListNode *pHead2 = createList(10);
+	ListNode*res = Merge(pHead1, pHead2);
+}
+
+void test_FindGreatestSumOfSubArray()
+{
+	vector<int> arr = { 6, -3, -2, 7, -15, 1, 2, 2 };
+	int max = FindGreatestSumOfSubArray(arr);
+}
+
+void test_GetNumberOfK()
+{
+	vector<int> arr = { 1, 2, 2, 2,2,2,3 ,3,4,4,5,6,7};
+	int n = getnumofk::GetNumberOfK(arr, 2);
+}
+
+void test_FindNumsAppearOnce()
+{
+	vector<int> arr = { 5, 5 };
+	int n1, n2;
+	findnumonce::FindNumsAppearOnce(arr, &n1, &n2);
+}
+
+void test_Sum_Solution()
+{
+	Solution4 a;
+	int n = a.Sum_Solution(5);
+}
+
+void test_deleteDuplication()
+{
+	ListNode *pHead1 = createList(5);
+	ListNode *pnew = new ListNode(4);
+	pnew->next = pHead1;
+	ListNode *p = deleteDuplication(pnew);
+}
