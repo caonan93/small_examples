@@ -27,3 +27,9 @@ void common_heap_stack_only() {
 	//onlyheapobect::B *b = new onlyheapobect::B;  error
 }
 
+void common_KMP()
+{
+	char* str = "ABCDABD";
+	char* source = "BBC ABCDAB ABCDABCDABDE";
+	char* match = kmp::KMP(source, str);
+}

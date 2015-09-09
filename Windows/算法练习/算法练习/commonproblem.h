@@ -99,3 +99,69 @@ namespace onlyheapobect {
 		~B() {}
 	};
 }
+
+// µœ÷kmpÀ„∑®
+namespace kmp
+{
+	int* GetNext(const char* str)
+	{
+		if (!str) return NULL;
+		int i = 1;
+		int ID = i - 1;
+		int* pNext = new int[strlen(str)];
+		pNext[ID] = 0;
+		while (str[i] != '\0')
+		{
+			if (str[pNext[ID]] == str[i])
+			{
+				pNext[i] = pNext[ID] + 1;
+				i++;
+				ID = i - 1;
+				continue;
+			}
+			if (pNext[ID] == 0)
+			{
+				pNext[i] = 0;
+				i++;
+				ID = i - 1;
+				continue;
+			}
+			ID = pNext[ID] - 1;
+		}
+		return pNext;
+	}
+	char* KMP(char* src, const char* dest)
+	{
+		if (!src || !dest) return NULL;
+		int* Next = GetNext(dest);
+		int j = 0;
+		const char* substr = dest;
+		while (*src != '\0')
+		{	
+			if (*src == substr[j])
+			{
+				while (substr[j] == *src)
+				{
+					j++;
+					src++;
+					if (substr[j] == '\0')
+					{
+						delete[] Next;
+						Next = NULL;
+						return src - j;
+					}
+				}
+			}
+			else
+			{
+				if (j == 0)
+					src++;
+				else
+					j = Next[j - 1];
+			}		
+		}
+		delete[]Next;
+		Next = NULL;
+		return NULL;
+	}
+}

@@ -311,7 +311,13 @@ vector<int> printListFromTailToHead(struct ListNode* head)//从尾到头打印链表
 	struct ListNode* p2 = p1->next;
 	if (p2 == NULL) { res.push_back(p1->val); return res; }
 	struct ListNode* p3 = p2->next;
-	if (p3 == NULL) { res.clear(); res.push_back(p2->val); res.push_back(p1->val); return res; }
+	if (p3 == NULL) 
+	{ 
+		res.clear(); 
+		res.push_back(p2->val);
+		res.push_back(p1->val); 
+		return res; 
+	}
 	//大于等于三个结点
 	p1->next = NULL;
 	while (p3->next != NULL)
@@ -502,34 +508,61 @@ struct TreeNode {
 	TreeNode(int x) : val(x), left(NULL), right(NULL) {
 	}
 };
+//重建二叉树例如输入前序遍历序列TODO:
+//{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+namespace rebuidtree
+{
+	TreeNode* reConstructBinaryTree(int* pre, 
+																	int* preEnd,
+																	int* in,
+																	int* inEnd)
+	{
+		int rootval = pre[0];
+		TreeNode* root = new TreeNode(rootval);
+		if (pre == preEnd)
+		{
+			if (in == inEnd && *pre == *in)
+			{
+				return root;
+			}
+		}
 
-/*
-TreeNode* consturctor(vector<int>::iterator Preleft, vector<int>::iterator Preright,
-vector<int>::iterator inLeft, vector<int>::iterator inRight)
-{
-TreeNode* root = new TreeNode(*Preleft);
+		//在中序遍历找到根结点的值
+		int *rootIn = in;
+		while (rootIn <= inEnd && *rootIn != rootval)
+		{
+			rootIn++;
+		}
+		if (rootIn == inEnd && *rootIn != rootval)
+		{
+			return NULL;//不合法的前序和中序遍历
+		}
+		int left_len = rootIn - in;
+		int* left_pre_end = pre + left_len;
+		if (left_len>0)
+		{
+			root->left = reConstructBinaryTree(pre + 1, left_pre_end, in, rootIn - 1);
+		}
+		if (left_len < preEnd-pre)
+		{
+			root->right = reConstructBinaryTree(left_pre_end + 1, preEnd, 
+																					rootIn + 1, inEnd);
+		}
+		return root;
+	}
 
-//寻找中间节点
-vector<int>::iterator it = inLeft;
-int iCount = 0;
-while (*Preleft != *it)
-{
-iCount++;
-it++;
+	struct TreeNode* reConstructBinaryTree(vector<int> pre, vector<int> in)
+	{
+		if (pre.empty() || in.empty() || pre.size() != in.size())
+			return NULL;
+		int* prepre = new int[pre.size()];
+		int* inin = new int[in.size()];
+		memcpy(prepre, &*pre.begin(), pre.size()*sizeof(int));
+		memcpy(inin, &*in.begin(), in.size()*sizeof(int));
+		return reConstructBinaryTree(prepre, prepre + pre.size() - 1,
+																 inin, inin + in.size() - 1);
+	}
 }
-Preright = Preleft + iCount;
-//构建左子树
-root->left = consturctor(Preleft + 1, Preleft+iCount, inLeft, it - 1);
-//right tree
-//root->right = consturctor(Preleft + iCount,);
-}
-struct TreeNode* reConstructBinaryTree(vector<int> pre, vector<int> in) {
-if (pre.empty() || in.empty || pre.size() != in.size())
-{
-return NULL;
-}
-return consturctor(pre.begin(), pre.end(), in.begin, in.end());
-}*/
 
 int FirstNotRepeatingChar(string str) {
 	if (str.empty())
@@ -1135,16 +1168,517 @@ public:
 	}
 };
 
-//删除排序链表中重复结点
-ListNode* deleteDuplication(ListNode* pHead)
+namespace delsamenode_
 {
-	if (!pHead )return NULL;
-	ListNode* tmp = pHead;
-	//判断是否头结点为重复结点
-
-	if (tmp->val == tmp->next->val)
+	//删除排序链表中重复结点
+	ListNode* deleteDuplication(ListNode* pHead)
 	{
-		
+		if (!pHead) return NULL;
+		ListNode *pPre = NULL;
+		ListNode* node = pHead;
+		while (node)
+		{
+			ListNode* pNext = node->next;
+			bool shouldDel = false;
+			if (pNext && node->val == pNext->val)
+			{
+				shouldDel = true;
+			}
+			if (!shouldDel)
+			{
+				pPre = node;
+				node = node->next;
+			}
+			else
+			{
+				ListNode* to_be_del = node;
+				int val = node->val;
+				while (to_be_del&&to_be_del->val == val)
+				{
+					pNext = to_be_del->next;
+					delete to_be_del;
+					to_be_del = NULL;
+					to_be_del = pNext;
+				}
+				if (!pPre)
+				{
+					pHead = pNext;
+				}
+				else
+				{
+					pPre->next = pNext;
+				}
+				node = pNext;
+			}
+		}	
+		return pHead;
 	}
-	return pHead;
+}
+
+
+
+//输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes, 
+//否则输出No。假设输入的数组的任意两个数字都互不相同。
+namespace verfying
+{
+	bool verfy(vector<int>& data, int start, int end)
+	{
+		if (start>=end)
+		{
+			return true;
+		}
+		int i = end;
+		int ending = data[end];
+		for (; i >= start; i--)
+		{
+			if (data[i] < ending)
+			{
+				//找到了左子树
+				break;
+			}
+		}
+
+		if (i < start)//没有左子树
+		{
+			return true;
+		}
+	
+		//判断左子树有没有大于右子树的
+		for (int j = i; j >= start; j--)
+		{
+			if (data[j] > ending)
+			{
+				return false;
+			}
+		}
+		bool left = true;
+		//判断左子树
+		left = verfy(data, 0, i);
+		//判断右子树
+		bool right = true;
+		right = verfy(data, i + 1, end);
+		return left&&right;
+	}
+	bool VerifySquenceOfBST(vector<int> sequence)
+	{
+		if (sequence.empty())
+		{
+			return false;
+		}
+		int end = sequence.size() - 1;
+		return verfy(sequence, 0, end);
+	}
+}
+
+//二叉搜索树与双向链表
+namespace convert_tree
+{
+	void convert(TreeNode* node, TreeNode** lastnode)
+	{
+		if (!node)
+		{
+			return;
+		}
+		TreeNode* current = node;
+		if (node->left)
+		{
+			convert(node->left, lastnode);
+		}		
+		node->left = *lastnode;
+		if (*lastnode)
+		{
+			(*lastnode)->right = current;
+		}
+		*lastnode = current;
+
+		if (node->right)
+		{
+			convert(node->right, lastnode);
+		}
+	}
+	TreeNode* Convert(TreeNode* pRootOfTree)
+	{
+		if (!pRootOfTree)
+		{
+			return NULL;
+		}
+		TreeNode* lastNode = NULL;
+		convert(pRootOfTree, &lastNode);
+		TreeNode* pHeadList = lastNode;
+		while (pHeadList!= NULL && pHeadList->left != NULL)
+		{
+			pHeadList = pHeadList->left;
+		}
+		return pHeadList;
+	}
+}
+
+//操作给定的二叉树，将其变换为源二叉树的镜像。
+void Mirror(TreeNode *pRoot)
+{
+	if (!pRoot)
+	{
+		return;
+	}
+	std::queue<TreeNode*> oTreeQueue;
+	oTreeQueue.push(pRoot);
+	while (!oTreeQueue.empty())
+	{
+		TreeNode* out = oTreeQueue.front();
+		oTreeQueue.pop();
+		if (out->left || out->right)
+		{
+			std::swap(out->left,out->right);
+			if (out->left)
+			{
+				oTreeQueue.push(out->left);
+			}
+			if (out->right)
+			{
+				oTreeQueue.push(out->right);
+			}
+		}
+	}
+}
+
+namespace subtree
+{
+	TreeNode* find_same_value(TreeNode*pRoot1, TreeNode* pRoot2)
+	{
+		if (pRoot1)
+		{
+			if (pRoot1->val == pRoot2->val)
+			{
+				return pRoot1;
+			}
+			TreeNode *left = find_same_value(pRoot1->left, pRoot2);
+			if (left)
+			{
+				return left;
+			}
+			TreeNode *right = find_same_value(pRoot1->right, pRoot2);
+			if (right)
+			{
+				return right;
+			}
+		}
+		return NULL;
+	}
+
+	bool hasSubSub(TreeNode* pRoot1, TreeNode* pRoot2)
+	{
+		bool res = true;
+		if (pRoot1 == NULL && pRoot2 == NULL)
+		{
+			return true;
+		}
+		else if (pRoot1 == NULL && pRoot2!=NULL)
+		{
+			return false;
+		}
+		if (pRoot2==NULL)
+		{
+			return true;
+		}
+
+		if (pRoot1->val != pRoot2->val)
+		{
+			return false;
+		}
+		else
+		{
+			res = hasSubSub(pRoot1->left, pRoot2->left);
+			if (res == false)
+			{
+				return false;
+			}
+			res = hasSubSub(pRoot1->right, pRoot2->right);
+			if (res == false)
+			{
+				return false;
+			}
+		}
+		return res;
+	}
+	//判断root2是不是root1的子结构
+	bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+	{
+		if (!pRoot1 || !pRoot2)
+		{
+			return false;
+		}
+		//先找到第一个值相同的结点
+		TreeNode*root1 = find_same_value(pRoot1, pRoot2);
+		if (!root1)
+		{
+			return false;
+		}
+		bool has = hasSubSub(root1, pRoot2);
+		if (!has)
+		{
+			bool res = HasSubtree(root1->left, pRoot2);
+			if (res)
+			{
+				return true;
+			}
+			res = HasSubtree(root1->right, pRoot2);
+			if (res)
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return true;
+		}
+		return false;
+	}
+}
+
+//二叉树的深度
+int TreeDepth(TreeNode* pRoot)
+{
+	if (pRoot == NULL)
+	{
+		return 0;
+	}
+	int leftDep = TreeDepth(pRoot->left);
+	int rightDep = TreeDepth(pRoot->right);
+	if (leftDep>rightDep)
+	{
+		return leftDep + 1;
+	}
+	else
+	{
+		return rightDep + 1;
+	}
+}
+
+namespace isBalance
+{
+	int TreeDepthBalanced(TreeNode* pRoot)
+	{
+		if (pRoot == NULL)
+		{
+			return 0;
+		}
+		int leftDep = TreeDepthBalanced(pRoot->left);
+		int rightDep = TreeDepthBalanced(pRoot->right);
+		if (leftDep > rightDep)
+		{
+			return leftDep + 1;
+		}
+		else
+		{
+			return rightDep + 1;
+		}
+	}
+
+	//输入一棵二叉树，判断该二叉树是否是平衡二叉树。
+	bool IsBalanced_Solution(TreeNode* pRoot)
+	{
+		if (!pRoot)
+		{
+			return true;
+		}
+
+		bool res = IsBalanced_Solution(pRoot->left);
+		if (res == false)
+		{
+			return false;
+		}
+		res = IsBalanced_Solution(pRoot->right);
+		if (res == false)
+		{
+			return false;
+		}
+		//计算左子树的深度
+		int leftDept = TreeDepthBalanced(pRoot->left);
+		//计算右子树的深度
+		int rightDept = TreeDepthBalanced(pRoot->right);
+
+		if (leftDept>rightDept)
+		{
+			if (leftDept-rightDept > 1)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else if (leftDept<rightDept)
+		{
+			if (rightDept-leftDept >1)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else//leftDept == rightDept
+		{
+			return true;
+		}		
+	}
+
+}
+
+namespace findpath_
+{
+	void findpath(TreeNode* root, 
+								int expectNum, 
+								vector<vector<int> >&ret,
+								int currentsum, vector<int> &oStackValue)
+	{
+		static int i = 0;
+		//用一个vector模拟栈区存储二叉树的路径
+		
+		oStackValue.push_back(root->val);
+		currentsum += root->val;
+		bool isleaf = root->left == NULL && root->right == NULL;	
+
+		if (currentsum == expectNum && isleaf)
+		{
+			//输出序列
+			ret.resize(++i);//这样做效率有点低
+			ret[i - 1].resize(oStackValue.size());
+			ret[i - 1].assign(oStackValue.begin(), oStackValue.end());
+		}
+
+		if (root->left)
+			findpath(root->left, expectNum, ret, currentsum, oStackValue);
+		if (root->right)
+			findpath(root->right, expectNum, ret, currentsum, oStackValue);
+		oStackValue.pop_back();
+	}
+	//二叉树中和为某一值的路径
+	vector<vector<int> > FindPath(TreeNode* root, int expectNumber)
+	{		
+		vector<vector<int> > ret;
+		if (!root)
+		{
+			return ret;
+		}	
+		//前序遍历
+		int current_sum = 0;
+		vector<int> oStackValue;
+		findpath(root, expectNumber, ret, current_sum, oStackValue);
+		return ret;
+	}
+}//end namespace
+
+//链表中环的入口结点
+ListNode* EntryNodeOfLoop(ListNode* pHead)
+{
+	if (!pHead)
+	{
+		return NULL;
+	}
+	ListNode* low = pHead;
+	ListNode* quick = pHead->next;
+	if (!quick)
+	{
+		return NULL;
+	}
+	bool hasring = false;
+	//判断链表有没有环
+	do
+	{
+		if (quick == low)
+		{
+			//链表有环
+			hasring = true;
+			break;
+		}
+		low = low->next;
+		quick = quick->next;
+		if (quick)
+		{
+			quick = quick->next;
+		}
+	}while (quick&&low);
+
+	int iringCount = 0;
+	if (hasring)
+	{
+		//计算环中有几个结点
+		do 
+		{
+			low = low->next;
+			iringCount++;
+		} while (quick != low);
+
+		//重新初始化快慢链表指针
+		low = pHead;
+		quick = pHead;
+		while (iringCount--)
+		{
+			quick = quick->next;
+		}
+		//一起向后走
+		while (1)
+		{
+			if (quick == low)
+			{
+				return quick;
+			}
+			quick = quick->next;
+			low = low->next;
+		}
+	}
+	return NULL;
+}
+
+struct TreeLinkNode
+{
+	int val;
+	struct TreeLinkNode *left;
+	struct TreeLinkNode *right;
+	struct TreeLinkNode *next;
+	TreeLinkNode(int x) :val(x), left(NULL), right(NULL), next(NULL)
+	{
+
+	}
+};
+
+//二叉树的下一个结点
+TreeLinkNode* GetNext(TreeLinkNode* pNode)
+{
+	if (!pNode) return NULL;
+	TreeLinkNode *current_parent = NULL;
+	TreeLinkNode *pNext = NULL;
+
+	if (pNode->right != NULL)
+	{
+		pNode = pNode->right;
+		pNext = pNode;
+		while (pNext&&pNext->left != NULL)
+		{
+			pNext = pNext->left;
+		}
+	}
+	else if (pNode->next)//存在父节点
+	{
+		//判断是不是该父亲的右子树
+		current_parent = pNode->next;
+		TreeLinkNode* node = pNode;
+		while (current_parent&&node == current_parent->right)
+		{
+			current_parent = current_parent->next;
+			node = node->next;
+		}
+		pNext = current_parent;
+	}
+	
+	return pNext;
+}
+
+//滑动窗口的最大值
+vector<int> maxInWindows(const vector<int>& num, unsigned int size)
+{
+
 }

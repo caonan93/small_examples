@@ -370,10 +370,135 @@ void test_Sum_Solution()
 	int n = a.Sum_Solution(5);
 }
 
+void test_VerifySquenceOfBST()
+{
+	vector<int> arr = { 7,4,6,5};
+	bool ret = verfying::VerifySquenceOfBST(arr);
+}
+
+void test_Convert()
+{
+	TreeNode* proot = new TreeNode(5);
+
+	TreeNode* x = new TreeNode(3);
+	TreeNode* p2 = new TreeNode(2);
+	TreeNode* p3 = new TreeNode(4);
+	TreeNode* p4 = new TreeNode(1);
+	TreeNode* p5 = new TreeNode(7);
+	TreeNode* p6 = new TreeNode(6);
+	TreeNode* p7 = new TreeNode(8);
+	proot->left = x;//TODO:这里命名很诡异如果是p1就会报错，具体和文件包含问题相关，最好不要.h包含.h
+	proot->right = p5;
+	x->left = p2;
+	x->right = p3;
+	p2->left = p4;
+	p5->left = p6;
+	p5->right = p7;
+
+	TreeNode*root = convert_tree::Convert(proot);
+}
+
+void test_Mirror()
+{
+	TreeNode* root = createsortTree(10);
+	Mirror(root);
+}
+
+void test_HasSubtree()
+{
+	TreeNode* proot1 = createsortTree(40);
+	TreeNode* proot2 = proot1->left;
+	bool res = subtree::HasSubtree(proot1, proot2);
+}
+
+void test_TreeDepth()
+{
+	TreeNode* proot1 = createsortTree(40);
+	int dep = TreeDepth(proot1);
+}
+
+void test_IsBalanced_Solution()
+{
+	TreeNode* proot1 = createsortTree(2);
+	bool res = isBalance::IsBalanced_Solution(proot1);
+}
+
+void test_FindPath()
+{
+	TreeNode* proot1 = new TreeNode(10);
+	TreeNode* pnode2 = new TreeNode(5);
+	TreeNode* pnode3 = new TreeNode(12);
+	TreeNode* pnode4 = new TreeNode(4);
+	TreeNode* pnode5 = new TreeNode(7);
+	proot1->left = pnode2;
+	proot1->right = pnode3;
+	pnode2->left = pnode4;
+	pnode2->right = pnode5;
+
+	TreeNode* proot2 = new TreeNode(5);
+	TreeNode* pn1 = new TreeNode(4);
+	TreeNode* pn2 = new TreeNode(3);
+	TreeNode* pn3 = new TreeNode(2);
+	TreeNode* pn4 = new TreeNode(1);
+	proot2->left = pn1;
+	pn1->right = pn2;
+	pn2->right = pn3;
+	pn3->right = pn4;
+	TreeNode* proot3 = createsortTree(100);
+
+  vector<vector<int> > ret = findpath_::FindPath(proot3, 1275);
+}
+
+void test_EntryNodeOfLoop()
+{
+	ListNode* ring = createList(5);
+	ListNode* tmp = ring;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	ListNode* tmp2 = ring->next->next;
+	tmp->next = tmp2;
+	ListNode* node = EntryNodeOfLoop(ring);
+}
+
+
 void test_deleteDuplication()
 {
-	ListNode *pHead1 = createList(5);
-	ListNode *pnew = new ListNode(4);
-	pnew->next = pHead1;
-	ListNode *p = deleteDuplication(pnew);
+	ListNode*head = createList(5);
+	ListNode* t1 = new ListNode(4);
+	t1->next = head;
+	ListNode*t2 = new ListNode(4);
+	t2->next = t1;
+	
+	ListNode*p =new struct ListNode(2);
+	p->next = head->next->next;
+	head->next->next = p;
+
+	ListNode* node_head = delsamenode_::deleteDuplication(t2);
+}
+
+void test_GetNext()
+{
+	TreeLinkNode *root = new TreeLinkNode(1);
+	TreeLinkNode *node1 = new TreeLinkNode(2);
+	TreeLinkNode *node2 = new TreeLinkNode(3);
+	TreeLinkNode *node3 = new TreeLinkNode(4);
+	TreeLinkNode *node4 = new TreeLinkNode(5);
+	root->left = node1;
+	node1->next = root;
+	root->right = node2;
+	node2->next = root;
+	node1->left = node3;
+	node1->right = node4;
+	node3->next = node1;
+	node4->next = node1;
+	TreeLinkNode*ret = GetNext(node4);
+}
+
+void test_reConstructBinaryTree()
+{
+	vector<int> pre = { 1, 2, 4, 7, 3, 5, 6, 8 };
+	vector<int> in = { 4, 7, 2, 1, 5, 3, 8, 6 };
+	TreeNode* root = rebuidtree::reConstructBinaryTree(pre,in);
 }

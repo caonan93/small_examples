@@ -32,17 +32,28 @@ void test() {
 	test_FindNumsAppearOnce();
 	test_Sum_Solution();
 	test_deleteDuplication();
+	test_VerifySquenceOfBST();
+	test_Convert();
+	test_Mirror();
+	test_HasSubtree();
+	test_TreeDepth();
+	test_IsBalanced_Solution();
+	test_FindPath();
+	test_EntryNodeOfLoop();
+	test_deleteDuplication();
+	test_GetNext();
+	test_reConstructBinaryTree();
 }
 
 void common() {
 	common_memcpy();
 	common_noinherit();
 	common_heap_stack_only();
+	common_KMP();
 }
 
 int main() {
 	test();
 	common();
-	//int a = sizeof(long double);
 	return 0;
 }
