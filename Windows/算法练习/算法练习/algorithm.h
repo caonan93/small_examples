@@ -29,7 +29,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <algorithm>
-
+#include <deque>
+#include <map>
+#include <hash_map>
 using namespace std;
 
 class Solution {
@@ -1686,7 +1688,229 @@ TreeLinkNode* GetNext(TreeLinkNode* pNode)
 { 2, 3, 4, 2, [6, 2, 5], 1 }，{ 2, 3, 4, 2, 6, [2, 5, 1] }*/
 vector<int> maxInWindows(const vector<int>& num, unsigned int size)
 {
+	//时间复杂度o(n)
 	vector<int> ret;
-	if (num.emplace()) return ret;
-	
+	if (num.empty()|| size <= 0) return ret;
+	if (size == 1) { ret.assign(num.begin(), num.end()); return ret; }
+	if (size > num.size()) { return ret; }
+	deque<int> index;
+	deque<int> val;
+	index.push_back(0);
+	val.push_back(num[0]);
+	int head = 0;
+	int end = 1;
+	while (end < num.size())
+	{
+		bool isMin = false;//判断dequue是否有元素
+		if (end-head+1 <= size)//滑动窗口没有失效
+		{	
+			int tmpindex = val.size()-1;
+			while (val[tmpindex] <= num[end])//删除前面比end小的确保里面保存的是最大的
+			{		
+				index.pop_back();
+				val.pop_back();
+				if (index.empty())
+				{
+					index.push_back(end);
+					val.push_back(num[end]);
+					isMin = true;
+					break;
+				}
+				tmpindex--;
+			}		
+			if (!isMin)
+			{
+				index.push_back(end);
+				val.push_back(num[end]);	
+			}
+			end++;
+			if (end == num.size())
+				ret.push_back(val.front());
+			continue;
+		}
+		//滑动窗口失效
+		head++;
+		//存入滑动窗口最大值	
+		int max = val.front();
+		if (int index_expire = index.front() < head)//判断头结点是否过期
+		{
+			val.pop_front();
+			index.pop_front();
+		}		
+		ret.push_back(max);
+	}
+	return ret;
+}
+
+int getPos(vector<int> A, int n, int val)
+{
+	// write code here
+	int start = 0;
+	int end = n-1;
+	while (1)
+	{
+		if (start > end) return -1;
+		int mid = (start + end) / 2;
+		if (A[mid] == val)
+		{
+			if (mid > 0 && A[mid - 1] == val)
+			{
+				end = mid - 1;
+				continue;
+			}
+			return mid;
+		}
+		else
+		{
+			if (A[mid] < val)
+			{			
+				start = mid + 1;
+			}
+			else
+			{
+				end = mid - 1;
+			}
+		}
+	}	
+}
+
+char findFirstRepeat(string A, int n)
+{
+	// write code here
+	if (A.empty()|| n<=0) return 0;
+	int rebeat[256];
+	for (int i = 0; i < 256;i++)
+	{
+		rebeat[i] = 0;
+	}
+	for (int i = 0; i < n;i++)
+	{
+		rebeat[A[i]]++;
+		if (rebeat[A[i]] == 2)
+		{
+			return A[i];
+		}
+	}
+	return 0;
+}
+
+/*
+请设计一个高效算法，再给定的字符串数组中，找到包含"Coder"的字符串(不区分大小写)，
+并将其作为一个新的数组返回。结果字符串的顺序按照"Coder"出现的次数递减排列，
+若两个串中"Coder"出现的次数相同，则保持他们在原数组中的位置关系。
+给定一个字符串数组A和它的大小n，请返回结果数组。保证原数组大小小于等于300,
+其中每个串的长度小于等于200。同时保证一定存在包含coder的字符串。
+测试样例：
+["i am a coder", "Coder Coder", "Code"], 3
+返回：["Coder Coder", "i am a coder"]*/
+
+namespace find_
+{
+	int* GetNext(const char* str)
+	{
+		if (!str) return NULL;
+		int i = 1;
+		int ID = i - 1;
+		int* pNext = new int[strlen(str)];
+		pNext[ID] = 0;
+		while (str[i] != '\0')
+		{
+			if (str[pNext[ID]] == str[i])
+			{
+				pNext[i] = pNext[ID] + 1;
+				i++;
+				ID = i - 1;
+				continue;
+			}
+			if (pNext[ID] == 0)
+			{
+				pNext[i] = 0;
+				i++;
+				ID = i - 1;
+				continue;
+			}
+			ID = pNext[ID] - 1;
+		}
+		return pNext;
+	}
+	int KMP(char* src, const char* dest)
+	{
+		if (!src || !dest) return NULL;
+		int* Next = GetNext(dest);
+		int j = 0;
+		int iCount = 0;
+		const char* substr = dest;
+		while (*src != '\0')
+		{
+			if (*src == substr[j])
+			{
+				while (substr[j] == *src)
+				{
+					j++;
+					src++;
+					if (substr[j] == '\0')
+					{
+						/*delete[] Next;
+						Next = NULL;*/
+						iCount++;
+						j = 0;
+						continue;
+					}
+				}
+			}
+			else
+			{
+				if (j == 0)
+					src++;
+				else
+					j = Next[j - 1];
+			}
+		}
+		delete[]Next;
+		Next = NULL;
+		return iCount;
+	}
+
+	void bubble_sort(vector<pair<int, int>>& arr)
+	{
+		if (arr.empty()) return;
+		for (int i = 0; i < arr.size()-1;++i)
+		{
+			for (int j = 0; j < arr.size() - 1 - i;++j)
+			{
+				if (arr[j].first < arr[j+1].first)
+				{
+					swap(arr[j], arr[j + 1]);
+				}
+			}
+		}
+	}
+	vector<string> findCoder(vector<string> A, int n)
+	{
+		// write code here
+		vector<string> ret;
+		if (A.empty() || n <= 0) return ret;
+		//hash_map<int, int> sort_index;//sortnum,index
+		vector<pair<int, int>> sort_pair;
+		for (int i = 0; i < n;i++)
+		{
+			string str_find_coder = A[i];
+			char* src = const_cast<char*>(str_find_coder.c_str());
+			char* dest1 = "coder";
+			char* dest2 = "Coder";
+			int count1 = KMP(src, dest1);
+			int count2 = KMP(src, dest2);
+			int index = count1 + count2;
+			if (index>0)
+			{		
+				sort_pair.push_back(make_pair(index, i));
+			}		
+		}
+		bubble_sort(sort_pair);//用一个冒泡排序保证排序的稳定
+		for (int i = 0; i < sort_pair.size();i++)
+		{
+			ret.push_back(A[sort_pair[i].second]);
+		}
+		return ret;
+	}
 }

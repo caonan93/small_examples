@@ -502,3 +502,33 @@ void test_reConstructBinaryTree()
 	vector<int> in = { 4, 7, 2, 1, 5, 3, 8, 6 };
 	TreeNode* root = rebuidtree::reConstructBinaryTree(pre,in);
 }
+
+void test_maxInWindows()
+{
+	vector<int> window = { 10, 14, 12, 11 };
+	vector<int> ret = maxInWindows(window, 5);
+}
+
+void test_getPos()
+{
+	vector<int> test = { 1, 3, 3,3,5, 7, 9 };
+	int ret = getPos(test, 5, 3);
+}
+
+void test_findFirstRepeat()
+{
+	string arr = "kdbaaak";
+	char c = findFirstRepeat(arr, 7);
+}
+
+void test_findCoder()
+{
+	vector<string> arr = { "coder", 
+		"xfcoderjbixcoderpuvwhcoderodpacoderycacoderjskcoderptcoderkcod \
+		erdtwcodergalucoderfnjpwcoderagmtcodermkzoqcoderysqsycoderlvc \
+		codervbycoderacuagcodereueucoderscoderrbcoder", 
+		"xbxcoderlafrcoderyuccoderjcoderefldcodersstujcoderelcoder", 
+		"dvfowcoderfencoderqekcoderbtmcoderehcoderriyjdcodermocoder", 
+		"ncbacoderjnvcoderfqcoderenwjpcoderkintcoderwtgcoder" };
+	vector<string> ret = find_::findCoder(arr, 5);
+}

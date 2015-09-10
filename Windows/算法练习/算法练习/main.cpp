@@ -43,6 +43,10 @@ void test() {
 	test_deleteDuplication();
 	test_GetNext();
 	test_reConstructBinaryTree();
+	test_maxInWindows();
+	test_getPos();
+	test_findFirstRepeat();
+	test_findCoder();
 }
 
 void common() {
